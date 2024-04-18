@@ -6,13 +6,9 @@ export const schemaTypes = [
     type: 'document',
     fields: [
       defineField({
-        name: 'what',
+        name: 'title',
         type: 'string',
       }),
-      {
-        name: 'who',
-        type: 'image',
-      },
       defineField({
         name: 'formium',
         type: 'formiumSelect',

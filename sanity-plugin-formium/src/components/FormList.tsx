@@ -1,17 +1,19 @@
 import {useEffect, useState} from 'react'
 import {Form, createClient} from '@formium/client'
-import {ObjectFieldProps} from 'sanity'
+import {StringInputProps} from 'sanity'
 import {PluginConfig} from '../types'
 
-export default function FormList(props: ObjectFieldProps, config: PluginConfig) {
-  const {
-    schemaType: {fields},
-  } = props
+export default function FormList(props: StringInputProps, config: PluginConfig) {
+  const {schemaType} = props
   const [forms, setForms] = useState<Form[]>([])
+
+  // Initialize formium client
   const {projectId, token} = config
   const formium = createClient(projectId, {
     apiToken: token,
   })
+
+  // Get + set available forms from formium
   useEffect(() => {
     const getForms = async () => {
       const {data} = await formium.findForms()
@@ -19,9 +21,9 @@ export default function FormList(props: ObjectFieldProps, config: PluginConfig) 
     }
     getForms()
   }, [])
+
   if (forms && forms.length) {
-    // Bold assumption that there will only be 1 field and/or that the field will be first
-    fields[0].type.options.list = forms.map(({name, id}) => {
+    schemaType.options.list = forms.map(({name, id}) => {
       return {
         title: name,
         value: id,

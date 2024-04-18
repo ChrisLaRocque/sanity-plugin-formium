@@ -5,17 +5,10 @@ import FormList from '../components/FormList'
 export default (config: PluginConfig) => {
   return defineField({
     name: 'formiumSelect',
-    type: 'object',
-    fields: [
-      {
-        name: 'form',
-        type: 'string',
-        options: {
-          list: ['what'],
-        },
-      },
-    ],
-
+    type: 'string',
+    options: {
+      list: [],
+    },
     components: {
       input: (props) => FormList(props, config),
     },
