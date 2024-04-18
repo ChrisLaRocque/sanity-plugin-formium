@@ -17,7 +17,7 @@ export default (config: PluginConfig) => {
     ],
 
     components: {
-      input: (props) => FormList({...props, pluginConfig: config}),
+      input: (props) => FormList(props, config),
     },
   })
 }

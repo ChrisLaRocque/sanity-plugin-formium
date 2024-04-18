@@ -5,7 +5,9 @@ import {schemaTypes} from './schemaTypes'
 import {myPlugin} from 'sanity-plugin-formium'
 
 const token = import.meta.env.SANITY_STUDIO_FORMIUM_TOKEN
+const formiumID = import.meta.env.SANITY_STUDIO_FORMIUM_ID
 const projectId = import.meta.env.SANITY_STUDIO_PROJECT_ID
+
 export default defineConfig({
   name: 'default',
   title: 'Test studio',
@@ -17,7 +19,7 @@ export default defineConfig({
     structureTool(),
     visionTool(),
     myPlugin({
-      projectId: '66206d8a1e412300017dd2db',
+      projectId: formiumID,
       token,
     }),
   ],
