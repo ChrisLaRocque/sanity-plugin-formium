@@ -1,14 +1,23 @@
-import {useEffect, useState} from 'react'
-import {Form, createClient} from '@formium/client'
+import {memo, useEffect, useState, type Dispatch, type SetStateAction} from 'react'
+import {createClient, type Form} from '@formium/client'
 import {StringInputProps} from 'sanity'
-import {PluginConfig} from '../types'
+import {Secrets} from '../types'
+import {Button, Card, Stack, Text} from '@sanity/ui'
+import Loading from './Loading'
 
-export default function FormList(props: StringInputProps, config: PluginConfig) {
-  const {schemaType} = props
+interface FormListProps extends StringInputProps {
+  secrets: Secrets
+  setOpen: Dispatch<SetStateAction<boolean>>
+}
+function FormList(props: FormListProps) {
+  const {schemaType, secrets, setOpen} = props
   const [forms, setForms] = useState<Form[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   // Initialize formium client
-  const {projectId, token} = config
+  const {projectId, token} = secrets
+  // projectId throws a type error
+  // @ts-ignore
   const formium = createClient(projectId, {
     apiToken: token,
   })
@@ -16,13 +25,23 @@ export default function FormList(props: StringInputProps, config: PluginConfig) 
   // Get + set available forms from formium
   useEffect(() => {
     const getForms = async () => {
-      const {data} = await formium.findForms()
-      setForms(data)
+      try {
+        const {data} = await formium.findForms()
+        setForms(data)
+      } catch (error) {
+        console.error('Error fetching forms', error)
+      }
+      setLoading(false)
     }
-    getForms()
-  }, [])
+    if (projectId && token) {
+      getForms()
+    }
+  }, [forms, loading])
 
+  // Add forms to the list of options
   if (forms && forms.length) {
+    // Our schema forces options to exist
+    // @ts-ignore
     schemaType.options.list = forms.map(({name, id}) => {
       return {
         title: name,
@@ -30,5 +49,28 @@ export default function FormList(props: StringInputProps, config: PluginConfig) 
       }
     })
   }
-  return props.renderDefault(props)
+
+  return (
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          {forms && forms.length ? (
+            props.renderDefault(props)
+          ) : (
+            <Stack padding={4} space={4}>
+              <Card>
+                <Text size={1}>No forms found. Do you need to make one?</Text>
+              </Card>
+              <Card>
+                <Button fontSize={1} text={'Check API settings'} onClick={(e) => setOpen(true)} />
+              </Card>
+            </Stack>
+          )}
+        </>
+      )}
+    </>
+  )
 }
+export default memo(FormList)
