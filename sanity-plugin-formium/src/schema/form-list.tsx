@@ -1,8 +1,6 @@
 import {defineField} from 'sanity'
 import {PluginConfig} from '../types'
 import Input from '../components/Input'
-import FormList from '../components/FormList'
-// import Input from '../components/Input'
 
 export default (config: PluginConfig) => {
   return defineField({
