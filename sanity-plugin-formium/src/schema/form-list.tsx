@@ -1,5 +1,6 @@
 import {defineField} from 'sanity'
 import {PluginConfig} from '../types'
+import Input from '../components/Input'
 import FormList from '../components/FormList'
 // import Input from '../components/Input'
 
@@ -10,7 +11,7 @@ export default (config: PluginConfig) => {
     // Blank options object so we don't get 'undefined' in the component
     options: {},
     components: {
-      input: (props) => FormList(props, config),
+      input: (props) => Input(props),
     },
   })
 }

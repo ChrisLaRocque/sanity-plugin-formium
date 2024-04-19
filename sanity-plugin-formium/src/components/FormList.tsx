@@ -1,16 +1,17 @@
-import {useEffect, useState, useCallback} from 'react'
-import {Form, createClient} from '@formium/client'
+import {useEffect, useState} from 'react'
+import {createClient, type Form} from '@formium/client'
 import {StringInputProps} from 'sanity'
 import {PluginConfig} from '../types'
-import ConfigureApi from './ConfigureApi'
 
-export default function FormList(props: StringInputProps, config: PluginConfig) {
-  const {schemaType} = props
+interface FormListProps extends StringInputProps {
+  secrets: PluginConfig
+}
+export default function FormList(props: FormListProps) {
+  const {schemaType, secrets} = props
   const [forms, setForms] = useState<Form[]>([])
-  const [open, setOpen] = useState(true)
-
+  console.log('props', props)
   // Initialize formium client
-  const {projectId, token} = config
+  const {projectId, token} = secrets
   const formium = createClient(projectId, {
     apiToken: token,
   })
@@ -21,7 +22,9 @@ export default function FormList(props: StringInputProps, config: PluginConfig) 
       const {data} = await formium.findForms()
       setForms(data)
     }
-    getForms()
+    if (projectId && token) {
+      getForms()
+    }
   }, [])
 
   if (forms && forms.length) {
@@ -34,5 +37,5 @@ export default function FormList(props: StringInputProps, config: PluginConfig) 
       }
     })
   }
-  return <>{open ? <ConfigureApi setOpen={setOpen} /> : props.renderDefault(props)}</>
+  return props.renderDefault(props)
 }
