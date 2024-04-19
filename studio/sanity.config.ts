@@ -2,7 +2,7 @@ import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
-import {myPlugin} from 'sanity-plugin-formium'
+import {formiumSelect} from 'sanity-plugin-formium'
 
 const token = import.meta.env.SANITY_STUDIO_FORMIUM_TOKEN
 const formiumID = import.meta.env.SANITY_STUDIO_FORMIUM_ID
@@ -18,7 +18,7 @@ export default defineConfig({
   plugins: [
     structureTool(),
     visionTool(),
-    myPlugin({
+    formiumSelect({
       projectId: formiumID,
       token,
     }),

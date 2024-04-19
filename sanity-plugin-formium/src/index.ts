@@ -4,14 +4,7 @@ import formList from './schema/form-list'
 // import {createClient} from '@formium/client'
 // import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
 
-export const myPlugin = definePlugin<PluginConfig | void>((config) => {
-  // const {projectId, token} = config
-  // const formium = createClient(projectId, {
-  //   apiToken: token,
-  // })
-  // const forms = await formium.findForms()
-
-  // console.log('forms', forms)
+export const formiumSelect = definePlugin<PluginConfig>((config) => {
   return {
     name: 'sanity-plugin-formium',
     schema: {
