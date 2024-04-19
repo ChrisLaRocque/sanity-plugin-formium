@@ -18,7 +18,11 @@ export default function Input(props: StringInputProps) {
 
   return (
     <Suspense fallback={<div>Loading</div>}>
-      {isLoading && !secretError ? <div>Loading...</div> : <FormList {...{...props, secrets}} />}
+      {isLoading && !secretError ? (
+        <div>Loading...</div>
+      ) : (
+        <FormList {...{...props, secrets, setOpen}} />
+      )}
       {open && <ConfigureApi setOpen={setOpen} />}
     </Suspense>
   )

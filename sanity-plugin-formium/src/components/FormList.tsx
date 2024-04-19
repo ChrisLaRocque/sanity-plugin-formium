@@ -2,12 +2,13 @@ import {useEffect, useState} from 'react'
 import {createClient, type Form} from '@formium/client'
 import {StringInputProps} from 'sanity'
 import {Secrets} from '../types'
+import {Button, Card, Stack, Text} from '@sanity/ui'
 
 interface FormListProps extends StringInputProps {
   secrets: Secrets
 }
 export default function FormList(props: FormListProps) {
-  const {schemaType, secrets} = props
+  const {schemaType, secrets, setOpen} = props
   const [forms, setForms] = useState<Form[]>([])
 
   // Initialize formium client
@@ -19,8 +20,12 @@ export default function FormList(props: FormListProps) {
   // Get + set available forms from formium
   useEffect(() => {
     const getForms = async () => {
-      const {data} = await formium.findForms()
-      setForms(data)
+      try {
+        const {data} = await formium.findForms()
+        setForms(data)
+      } catch (error) {
+        console.error('Error fetching forms', error)
+      }
     }
     if (projectId && token) {
       getForms()
@@ -37,5 +42,21 @@ export default function FormList(props: FormListProps) {
       }
     })
   }
-  return props.renderDefault(props)
+
+  return (
+    <>
+      {forms && forms.length ? (
+        props.renderDefault(props)
+      ) : (
+        <Stack padding={4} space={4}>
+          <Card>
+            <Text size={1}>No forms found. Do you need to make one?</Text>
+          </Card>
+          <Card>
+            <Button fontSize={1} text={'Check API settings'} onClick={(e) => setOpen(true)} />
+          </Card>
+        </Stack>
+      )}
+    </>
+  )
 }
