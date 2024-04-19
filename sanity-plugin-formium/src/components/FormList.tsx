@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react'
 import {createClient, type Form} from '@formium/client'
 import {StringInputProps} from 'sanity'
-import {PluginConfig} from '../types'
+import {Secrets} from '../types'
 
 interface FormListProps extends StringInputProps {
-  secrets: PluginConfig
+  secrets: Secrets
 }
 export default function FormList(props: FormListProps) {
   const {schemaType, secrets} = props

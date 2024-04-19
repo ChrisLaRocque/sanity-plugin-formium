@@ -1,19 +1,19 @@
 import {useMemo} from 'react'
 import {useDocumentValues} from 'sanity'
 
-import {PluginConfig} from '../types'
+import {Secrets} from '../types'
 
 const path = ['token', 'projectId']
 const secretsDocumentId = 'secrets.formium'
 
 export const useSecretsDocumentValues = () => {
-  const {error, isLoading, value} = useDocumentValues<Partial<PluginConfig> | null | undefined>(
+  const {error, isLoading, value} = useDocumentValues<Partial<Secrets> | null | undefined>(
     secretsDocumentId,
     path,
   )
   const cache = useMemo(() => {
     const exists = Boolean(value)
-    const secrets: PluginConfig = {
+    const secrets: Secrets = {
       token: value?.token,
       projectId: value?.projectId,
     }

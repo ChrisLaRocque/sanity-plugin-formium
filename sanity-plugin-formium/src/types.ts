@@ -1,4 +1,4 @@
-export interface PluginConfig {
+export interface Secrets {
   projectId: string
   token: string
 }

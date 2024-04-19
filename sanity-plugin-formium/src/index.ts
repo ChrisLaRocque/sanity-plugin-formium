@@ -1,14 +1,11 @@
-import {definePlugin, defineType, defineField} from 'sanity'
-import {PluginConfig} from './types'
+import {definePlugin} from 'sanity'
 import formList from './schema/form-list'
-// import {createClient} from '@formium/client'
-// import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
 
-export const formiumSelect = definePlugin<PluginConfig>((config) => {
+export const formiumSelect = definePlugin(() => {
   return {
     name: 'sanity-plugin-formium',
     schema: {
-      types: [formList(config)],
+      types: [formList],
     },
   }
 })

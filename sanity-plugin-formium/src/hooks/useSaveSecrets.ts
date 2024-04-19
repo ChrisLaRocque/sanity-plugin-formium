@@ -2,14 +2,11 @@ import {useCallback} from 'react'
 import type {SanityClient} from 'sanity'
 
 import {saveSecrets} from '../actions/secrets'
-import type {PluginConfig} from '../types'
+import type {Secrets} from '../types'
 
-export const useSaveSecrets = (client: SanityClient, secrets: PluginConfig) => {
+export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
   return useCallback(
-    async ({
-      token,
-      projectId,
-    }: Pick<PluginConfig, 'token' | 'projectId'>): Promise<PluginConfig> => {
+    async ({token, projectId}: Pick<Secrets, 'token' | 'projectId'>): Promise<Secrets> => {
       try {
         await saveSecrets(client, token!, projectId!)
       } catch (err) {
