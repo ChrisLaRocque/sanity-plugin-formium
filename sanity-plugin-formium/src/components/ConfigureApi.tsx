@@ -1,4 +1,4 @@
-import {useCallback, useId, useState} from 'react'
+import {memo, useCallback, useId, useState, type Dispatch, type SetStateAction} from 'react'
 import {Dialog, Flex, Box, Stack, Inline, Button, TextInput} from '@sanity/ui'
 import FormField from './FormField'
 import FormiumLogo from './FormiumLogo'
@@ -15,13 +15,14 @@ function Header() {
   )
 }
 
-export default function ConfigureApi({setOpen}) {
+function ConfigureApi({setOpen}: {setOpen: Dispatch<SetStateAction<boolean>>}) {
   // Sanity get + set
   const client = useClient({apiVersion: '2024-04-18'})
   const {
     value: {secrets},
     isLoading,
   } = useSecretsDocumentValues()
+
   const handleSaveSecrets = useSaveSecrets(client, secrets)
 
   // UI states
@@ -37,6 +38,7 @@ export default function ConfigureApi({setOpen}) {
     setSubmitting(true)
     const {target} = event
     // TODO - don't do this
+    // @ts-ignore
     handleSaveSecrets({projectId: target[0].value, token: target[1].value})
       .catch((err) => console.error('Error saving secrets', err))
       .finally(() => {
@@ -102,3 +104,4 @@ export default function ConfigureApi({setOpen}) {
     </Dialog>
   )
 }
+export default memo(ConfigureApi)

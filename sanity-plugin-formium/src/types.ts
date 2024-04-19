@@ -1,4 +1,4 @@
 export interface Secrets {
-  projectId: string
-  token: string
+  projectId: string | undefined
+  token: string | undefined
 }

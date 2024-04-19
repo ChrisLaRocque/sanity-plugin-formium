@@ -3,9 +3,10 @@ import {useSecretsDocumentValues} from '../hooks/useSecretsDocumentValues'
 import FormList from './FormList'
 import {StringInputProps} from 'sanity'
 import ConfigureApi from './ConfigureApi'
+import Loading from './Loading'
 
 export default function Input(props: StringInputProps) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState<boolean>(false)
   const {
     value: {secrets},
     isLoading,
@@ -17,12 +18,8 @@ export default function Input(props: StringInputProps) {
   }
 
   return (
-    <Suspense fallback={<div>Loading</div>}>
-      {isLoading && !secretError ? (
-        <div>Loading...</div>
-      ) : (
-        <FormList {...{...props, secrets, setOpen}} />
-      )}
+    <Suspense fallback={<Loading />}>
+      {isLoading && !secretError ? <Loading /> : <FormList {...{...props, secrets, setOpen}} />}
       {open && <ConfigureApi setOpen={setOpen} />}
     </Suspense>
   )

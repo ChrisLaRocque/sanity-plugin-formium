@@ -13,7 +13,7 @@ export const useSecretsDocumentValues = () => {
   )
   const cache = useMemo(() => {
     const exists = Boolean(value)
-    const secrets: Secrets = {
+    const secrets = {
       token: value?.token,
       projectId: value?.projectId,
     }
