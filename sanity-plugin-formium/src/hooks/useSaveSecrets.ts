@@ -4,7 +4,7 @@ import type {SanityClient} from 'sanity'
 import {saveSecrets} from '../actions/secrets'
 import type {PluginConfig} from '../types'
 
-export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
+export const useSaveSecrets = (client: SanityClient, secrets: PluginConfig) => {
   return useCallback(
     async ({
       token,

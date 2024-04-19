@@ -9,7 +9,7 @@ interface FormListProps extends StringInputProps {
 export default function FormList(props: FormListProps) {
   const {schemaType, secrets} = props
   const [forms, setForms] = useState<Form[]>([])
-  console.log('props', props)
+
   // Initialize formium client
   const {projectId, token} = secrets
   const formium = createClient(projectId, {
