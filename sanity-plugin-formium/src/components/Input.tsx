@@ -1,4 +1,4 @@
-import {Suspense, useState} from 'react'
+import {useState} from 'react'
 import {useSecretsDocumentValues} from '../hooks/useSecretsDocumentValues'
 import FormList from './FormList'
 import {StringInputProps} from 'sanity'
@@ -18,9 +18,9 @@ export default function Input(props: StringInputProps) {
   }
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       {isLoading && !secretError ? <Loading /> : <FormList {...{...props, secrets, setOpen}} />}
       {open && <ConfigureApi setOpen={setOpen} />}
-    </Suspense>
+    </>
   )
 }

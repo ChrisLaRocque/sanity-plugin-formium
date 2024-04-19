@@ -16,7 +16,7 @@ function FormList(props: FormListProps) {
 
   // Initialize formium client
   const {projectId, token} = secrets
-  // I'm sure there's a better approach than ignoring
+  // projectId throws a type error
   // @ts-ignore
   const formium = createClient(projectId, {
     apiToken: token,
@@ -28,11 +28,10 @@ function FormList(props: FormListProps) {
       try {
         const {data} = await formium.findForms()
         setForms(data)
-        setLoading(false)
       } catch (error) {
         console.error('Error fetching forms', error)
-        setLoading(false)
       }
+      setLoading(false)
     }
     if (projectId && token) {
       getForms()
