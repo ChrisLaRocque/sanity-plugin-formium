@@ -2,7 +2,7 @@ import {memo, useEffect, useState, type Dispatch, type SetStateAction} from 'rea
 import {createClient, type Form} from '@formium/client'
 import {StringInputProps} from 'sanity'
 import {Secrets} from '../types'
-import {Button, Card, Stack, Text} from '@sanity/ui'
+import {Button, Card, Stack, Text, Flex} from '@sanity/ui'
 import Loading from './Loading'
 
 interface FormListProps extends StringInputProps {
@@ -57,15 +57,22 @@ function FormList(props: FormListProps) {
       ) : (
         <>
           {forms && forms.length ? (
-            <>
-              {props.renderDefault(props)}
+            <Stack space={2}>
+              <Card>{props.renderDefault(props)}</Card>
+              <Card>
+                <Flex justify={'flex-end'} padding={1}>
+                  <a onClick={(e) => setOpen(true)} style={{cursor: 'pointer'}}>
+                    <Text size={1}>API settings</Text>
+                  </a>
+                </Flex>
+              </Card>
               {/* Un-comment to easily trigger the API key modal */}
               {/* <Stack paddingTop={4} space={4}>
                 <Card>
                   <Button fontSize={1} text={'Check API settings'} onClick={(e) => setOpen(true)} />
                 </Card>
               </Stack> */}
-            </>
+            </Stack>
           ) : (
             <Stack padding={4} space={4}>
               <Card>
