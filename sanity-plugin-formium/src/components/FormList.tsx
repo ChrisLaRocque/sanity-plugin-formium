@@ -66,12 +66,6 @@ function FormList(props: FormListProps) {
                   </a>
                 </Flex>
               </Card>
-              {/* Un-comment to easily trigger the API key modal */}
-              {/* <Stack paddingTop={4} space={4}>
-                <Card>
-                  <Button fontSize={1} text={'Check API settings'} onClick={(e) => setOpen(true)} />
-                </Card>
-              </Stack> */}
             </Stack>
           ) : (
             <Stack padding={4} space={4}>
