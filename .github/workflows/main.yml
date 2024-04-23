@@ -2,14 +2,14 @@
 name: CI & Release
 
 # Workflow name based on selected inputs. Fallback to default Github naming when expression evaluates to empty string
-# run-name: >-
-#   ${{
-#     inputs.release && inputs.test && format('Build {0} ➤ Test ➤ Publish to NPM', github.ref_name)  ||
-#     inputs.release && !inputs.test && format('Build {0} ➤ Skip Tests ➤ Publish to NPM', github.ref_name) ||
-#     github.event_name == 'workflow_dispatch' && inputs.test && format('Build {0} ➤ Test', github.ref_name) ||
-#     github.event_name == 'workflow_dispatch' && !inputs.test && format('Build {0} ➤ Skip Tests', github.ref_name) ||
-#     ''
-#   }}
+run-name: >-
+  ${{
+    inputs.release && inputs.test && format('Build {0} ➤ Test ➤ Publish to NPM', github.ref_name)  ||
+    inputs.release && !inputs.test && format('Build {0} ➤ Skip Tests ➤ Publish to NPM', github.ref_name) ||
+    github.event_name == 'workflow_dispatch' && inputs.test && format('Build {0} ➤ Test', github.ref_name) ||
+    github.event_name == 'workflow_dispatch' && !inputs.test && format('Build {0} ➤ Skip Tests', github.ref_name) ||
+    ''
+  }}
 
 on:
   # Build on pushes branches that have a PR (including drafts)
@@ -20,11 +20,11 @@ on:
   # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
   workflow_dispatch:
     inputs:
-      # test:
-      #   description: Run tests
-      #   required: true
-      #   default: true
-      #   type: boolean
+      test:
+        description: Run tests
+        required: true
+        default: true
+        type: boolean
       release:
         description: Release new version
         required: true
@@ -61,44 +61,46 @@ jobs:
         # But not the build script, as semantic-release will crash if this command fails so it makes sense to test it early
       - run: npm run prepublishOnly --if-present
 
-  # test:
-  #   needs: build
-  #   # The test matrix can be skipped, in case a new release needs to be fast-tracked and tests are already passing on main
-  #   if: github.event.inputs.test != 'false'
-  #   runs-on: ${{ matrix.os }}
-  #   name: Node.js ${{ matrix.node }} / ${{ matrix.os }}
-  #   defaults:
-  #     run:
-  #       working-directory: ./sanity-plugin-formium
-  #   strategy:
-  #     # A test failing on windows doesn't mean it'll fail on macos. It's useful to let all tests run to its completion to get the full picture
-  #     fail-fast: false
-  #     matrix:
-  #       # Run the testing suite on each major OS with the latest LTS release of Node.js
-  #       os: [macos-latest, ubuntu-latest, windows-latest]
-  #       node: [lts/*]
-  #       # It makes sense to also test the oldest, and latest, versions of Node.js, on ubuntu-only since it's the fastest CI runner
-  #       include:
-  #         - os: ubuntu-latest
-  #           # Test the oldest LTS release of Node that's still receiving bugfixes and security patches, versions older than that have reached End-of-Life
-  #           node: lts/-1
-  #         - os: ubuntu-latest
-  #           # Test the actively developed version that will become the latest LTS release next October
-  #           node: current
-  #   steps:
-  #     # It's only necessary to do this for windows, as mac and ubuntu are sane OS's that already use LF
-  #     - name: Set git to use LF
-  #       if: matrix.os == 'windows-latest'
-  #       run: |
-  #         git config --global core.autocrlf false
-  #         git config --global core.eol lf
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         cache: npm
-  #         node-version: ${{ matrix.node }}
-  #     - run: npm install
-  #     - run: npm test --if-present
+  test:
+    needs: build
+    # The test matrix can be skipped, in case a new release needs to be fast-tracked and tests are already passing on main
+    if: github.event.inputs.test != 'false'
+    runs-on: ${{ matrix.os }}
+    name: Node.js ${{ matrix.node }} / ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./sanity-plugin-formium
+    strategy:
+      # A test failing on windows doesn't mean it'll fail on macos. It's useful to let all tests run to its completion to get the full picture
+      fail-fast: false
+      matrix:
+        # Run the testing suite on each major OS with the latest LTS release of Node.js
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node: [lts/*]
+        # It makes sense to also test the oldest, and latest, versions of Node.js, on ubuntu-only since it's the fastest CI runner
+        include:
+          - os: ubuntu-latest
+            # Test the oldest LTS release of Node that's still receiving bugfixes and security patches, versions older than that have reached End-of-Life
+            node: lts/-1
+          - os: ubuntu-latest
+            # Test the actively developed version that will become the latest LTS release next October
+            node: current
+    steps:
+      # It's only necessary to do this for windows, as mac and ubuntu are sane OS's that already use LF
+      - name: Set git to use LF
+        if: matrix.os == 'windows-latest'
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: ${{ matrix.node }}
+          cache-dependency-path: sanity-plugin-formium/package-lock.json
+
+      - run: npm install --legacy-peer-deps
+      - run: npm test --if-present
 
   release:
     permissions:
@@ -124,7 +126,8 @@ jobs:
         with:
           cache: npm
           node-version: lts/*
-      - run: npm clean-install
+          cache-dependency-path: sanity-plugin-formium/package-lock.json
+      - run: npm clean-install --legacy-peer-deps
       - run: npm audit signatures
         # Branches that will release new versions are defined in .releaserc.json
         # @TODO remove --dry-run after verifying everything is good to go
