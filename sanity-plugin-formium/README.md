@@ -38,3 +38,11 @@ on how to run this plugin with hotreload in the studio.
 
 - Document for secrets
 - Tool to view forms?
+
+
+### Release new version
+
+Run ["CI & Release" workflow](TODO/actions/workflows/main.yml).
+Make sure to select the main branch and check "Release new version".
+
+Semantic release will only release on configured branches, so it is safe to run release on any branch.
