@@ -53,6 +53,7 @@ jobs:
         with:
           cache: npm
           node-version: lts/*
+          cache-dependency-path: sanity-plugin-formium/package-lock.json
       - run: npm clean-install
         # Linting can be skipped
       - run: npm run lint --if-present
