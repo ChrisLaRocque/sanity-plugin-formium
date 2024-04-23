@@ -1,26 +1,44 @@
-import {useState} from 'react'
-import {useSecretsDocumentValues} from '../hooks/useSecretsDocumentValues'
-import FormList from './FormList'
+import {SettingsView, useSecrets} from '@sanity/studio-secrets'
+import React, {useEffect, useState} from 'react'
 import {StringInputProps} from 'sanity'
-import ConfigureApi from './ConfigureApi'
-import Loading from './Loading'
+
+import type {Secrets} from '../types'
+import FormList from './FormList'
+
+const namespace = 'formiumPlugin'
+
+const pluginConfigKeys = [
+  {
+    key: 'projectId',
+    title: 'Your project ID',
+  },
+  {
+    key: 'token',
+    title: 'Your secret API token',
+  },
+]
 
 export default function Input(props: StringInputProps) {
-  const [open, setOpen] = useState<boolean>(false)
-  const {
-    value: {secrets},
-    isLoading,
-  } = useSecretsDocumentValues()
+  const {secrets} = useSecrets<Secrets>(namespace)
+  const [showSettings, setShowSettings] = useState(false)
 
-  const secretError = !isLoading && (!secrets.token || !secrets.projectId)
-  if (secretError) {
-    setOpen(true)
+  useEffect(() => {
+    if (!secrets || !secrets.token || !secrets.projectId) {
+      setShowSettings(true)
+    }
+  }, [secrets])
+
+  if (!showSettings && secrets?.token && secrets?.projectId) {
+    return <FormList {...{...props, secrets, setOpen: setShowSettings}} />
   }
 
   return (
-    <>
-      {isLoading && !secretError ? <Loading /> : <FormList {...{...props, secrets, setOpen}} />}
-      {open && <ConfigureApi setOpen={setOpen} />}
-    </>
+    <SettingsView
+      title={'Formium API settings'}
+      namespace={namespace}
+      keys={pluginConfigKeys}
+      // eslint-disable-next-line react/jsx-no-bind
+      onClose={() => setShowSettings(false)}
+    />
   )
 }

@@ -1,8 +1,9 @@
-import {memo, useEffect, useState, type Dispatch, type SetStateAction} from 'react'
 import {createClient, type Form} from '@formium/client'
+import {Button, Card, Flex, Stack, Text} from '@sanity/ui'
+import {type Dispatch, memo, type SetStateAction, useEffect, useState} from 'react'
 import {StringInputProps} from 'sanity'
+
 import {Secrets} from '../types'
-import {Button, Card, Stack, Text, Flex} from '@sanity/ui'
 import Loading from './Loading'
 
 interface FormListProps extends StringInputProps {
@@ -16,9 +17,14 @@ function FormList(props: FormListProps) {
 
   // Initialize formium client
   const {projectId, token} = secrets
+
+  // If either are blank, get the API details
+  if (!projectId || !token) {
+    setOpen(true)
+  }
+
   // projectId throws a type error
-  // @ts-ignore
-  const formium = createClient(projectId, {
+  const formium = createClient(projectId || '', {
     apiToken: token,
   })
 
@@ -33,15 +39,14 @@ function FormList(props: FormListProps) {
       }
       setLoading(false)
     }
-    if (projectId && token) {
+    if (projectId && token && formium) {
       getForms()
     }
-  }, [forms, loading])
+  }, [formium, forms, loading, projectId, token])
 
   // Add forms to the list of options
-  if (forms && forms.length) {
+  if (forms && forms.length && schemaType?.type?.jsonType === 'string' && schemaType.options) {
     // Our schema forces options to exist
-    // @ts-ignore
     schemaType.options.list = forms.map(({name, id}) => {
       return {
         title: name,
@@ -61,7 +66,8 @@ function FormList(props: FormListProps) {
               <Card>{props.renderDefault(props)}</Card>
               <Card>
                 <Flex justify={'flex-end'} padding={1}>
-                  <a onClick={(e) => setOpen(true)} style={{cursor: 'pointer'}}>
+                  {/*  eslint-disable-next-line react/jsx-no-bind */}
+                  <a onClick={() => setOpen(true)} style={{cursor: 'pointer'}}>
                     <Text size={1}>API settings</Text>
                   </a>
                 </Flex>
@@ -73,7 +79,8 @@ function FormList(props: FormListProps) {
                 <Text size={1}>No forms found. Do you need to make one?</Text>
               </Card>
               <Card>
-                <Button fontSize={1} text={'Check API settings'} onClick={(e) => setOpen(true)} />
+                {/*  eslint-disable-next-line react/jsx-no-bind */}
+                <Button fontSize={1} text={'Check API settings'} onClick={() => setOpen(true)} />
               </Card>
             </Stack>
           )}
