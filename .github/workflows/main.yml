@@ -54,7 +54,7 @@ jobs:
           cache: npm
           node-version: lts/*
           cache-dependency-path: sanity-plugin-formium/package-lock.json
-      - run: npm clean-install
+      - run: npm clean-install --legacy-peer-deps
         # Linting can be skipped
       - run: npm run lint --if-present
         if: github.event.inputs.test != 'false'
