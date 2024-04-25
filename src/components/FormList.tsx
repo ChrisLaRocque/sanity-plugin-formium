@@ -49,10 +49,10 @@ function FormList(props: FormListProps) {
 
   // Add forms to the list of options
   if (forms && forms.length && schemaType?.type?.jsonType === 'string' && schemaType.options) {
-    schemaType.options.list = forms.map(({name, slug}) => {
+    schemaType.options.list = forms.map(({name, id}) => {
       return {
         title: name,
-        value: slug,
+        value: id,
       }
     })
   }
