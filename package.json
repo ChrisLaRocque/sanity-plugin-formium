@@ -1,44 +1,54 @@
 {
   "name": "sanity-plugin-formium",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Sanity plugin for Formium forms",
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
+  "homepage": "https://github.com/ChrisLaRocque/sanity-plugin-formium#readme",
+  "bugs": {
+    "url": "https://github.com/ChrisLaRocque/sanity-plugin-formium/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/ChrisLaRocque/sanity-plugin-formium.git"
+  },
   "license": "MIT",
   "author": "Chris LaRocque <chris.larocque@sanity.io>",
   "sideEffects": false,
-  "type": "commonjs",
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.js"
+      "import": "./lib/index.mjs",
+      "default": "./lib/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./lib/index.esm.js",
+  "types": "./lib/index.d.ts",
   "files": [
-    "dist",
-    "sanity.json",
     "src",
-    "v2-incompatible.js"
+    "lib",
+    "v2-incompatible.js",
+    "sanity.json"
   ],
   "scripts": {
     "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
-    "format": "prettier --write --cache --ignore-unknown .",
     "link-watch": "plugin-kit link-watch",
     "lint": "eslint .",
+    "prepare": "husky install",
     "prepublishOnly": "npm run build",
-    "watch": "pkg-utils watch --strict",
-    "prepare": "husky install"
+    "test": "echo 'no tests'",
+    "watch": "pkg-utils watch --strict"
   },
+  "browserslist": "extends @sanity/browserslist-config",
+  "prettier": "@sanity/prettier-config",
   "dependencies": {
     "@formium/client": "^0.1.4",
     "@sanity/incompatible-plugin": "^1.0.4",
-    "@sanity/studio-secrets": "^2.0.2",
+    "@sanity/studio-secrets": "^3.0.0",
     "@sanity/ui": "^2.1.4"
   },
   "devDependencies": {
@@ -46,6 +56,7 @@
     "@commitlint/config-conventional": "^19.2.2",
     "@sanity/pkg-utils": "^6.7.0",
     "@sanity/plugin-kit": "^4.0.4",
+    "@sanity/prettier-config": "^1.0.2",
     "@sanity/semantic-release-preset": "^4.1.7",
     "@types/react": "^18.2.79",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
@@ -65,19 +76,17 @@
     "react-dom": "^18.2.0",
     "sanity": "^3.38.0",
     "semantic-release": "^23.0.8",
-    "styled-components": "^6.1.8",
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
     "react": "^18",
-    "sanity": "^3"
+    "sanity": "^3",
+    "styled-components": "^6.1"
   },
   "engines": {
     "node": ">=18"
   },
-  "sanityPlugin": {
-    "verifyPackage": {
-      "eslintImports": false
-    }
+  "publishConfig": {
+    "access": "public"
   }
 }

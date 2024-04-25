@@ -1,9 +1,9 @@
 import {createClient, type Form} from '@formium/client'
 import {Button, Card, Flex, Stack, Text} from '@sanity/ui'
-import {type Dispatch, memo, type SetStateAction, useEffect, useState} from 'react'
-import {StringInputProps} from 'sanity'
+import {type Dispatch, memo, type SetStateAction, useMemo, useState} from 'react'
+import type {StringInputProps} from 'sanity'
 
-import {Secrets} from '../types'
+import type {Secrets} from '../types'
 import Loading from './Loading'
 
 interface FormListProps extends StringInputProps {
@@ -29,7 +29,7 @@ function FormList(props: FormListProps) {
   })
 
   // Get + set available forms from formium
-  useEffect(() => {
+  useMemo(() => {
     const getForms = async () => {
       try {
         const {data} = await formium.findForms()
@@ -42,7 +42,10 @@ function FormList(props: FormListProps) {
     if (projectId && token && formium) {
       getForms()
     }
-  }, [formium, forms, loading, projectId, token])
+    // we don't want to run this when formium changes as this creates
+    // an infinite loop so exclude it from the dependencies below
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId, token])
 
   // Add forms to the list of options
   if (forms && forms.length && schemaType?.type?.jsonType === 'string' && schemaType.options) {
