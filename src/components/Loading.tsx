@@ -1,11 +1,9 @@
-import {Card, Stack, Text} from '@sanity/ui'
+import {Card, Text} from '@sanity/ui'
 
-export default function Loading() {
+export default function Loading(): JSX.Element {
   return (
-    <Stack padding={4} space={4}>
-      <Card>
-        <Text size={1}>Loading...</Text>
-      </Card>
-    </Stack>
+    <Card tone="transparent" padding={3} radius={2} border>
+      <Text size={1}>Loading...</Text>
+    </Card>
   )
 }

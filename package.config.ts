@@ -1,8 +1,8 @@
 import {defineConfig} from '@sanity/pkg-utils'
 
 export default defineConfig({
-  dist: 'dist',
-  tsconfig: 'tsconfig.dist.json',
+  legacyExports: true,
+  dist: 'lib',
 
   // Remove this block to enable strict export validation
   extract: {

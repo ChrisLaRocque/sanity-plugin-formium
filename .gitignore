@@ -57,5 +57,6 @@ yalc.lock
 *.tgz
 
 # Compiled plugin
+lib
 dist
 .env
