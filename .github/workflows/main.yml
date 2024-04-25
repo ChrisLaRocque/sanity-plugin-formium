@@ -54,7 +54,7 @@ jobs:
         # Linting can be skipped
       # - run: npm run lint --if-present
       #   if: github.event.inputs.test != 'false'
-        # But not the build script, as semantic-release will crash if this command fails so it makes sense to test it early
+      # But not the build script, as semantic-release will crash if this command fails so it makes sense to test it early
       - run: npm run prepublishOnly --if-present
 
   test:
@@ -123,5 +123,5 @@ jobs:
         # e.g. git tags were pushed but it exited before `npm publish`
         if: always()
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
