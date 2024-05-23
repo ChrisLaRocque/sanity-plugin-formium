@@ -26,6 +26,13 @@ export default defineConfig({
 
 You'll need your project ID and an API key from Formium
 
+Then in your schemas you can add fields with type `formiumSelect`
+```ts
+    defineField({
+      name: "form",
+      type: "formiumSelect",
+    }),
+```
 ## License
 
 [MIT](LICENSE) © Chris LaRocque
